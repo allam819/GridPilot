@@ -8,7 +8,12 @@ from sqlalchemy.orm import sessionmaker
 
 import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://gridpilot:gridpilot_secret@localhost:5432/gridpilot")
+# Neon gives us postgresql:// but we need postgresql+asyncpg:// for async SQLAlchemy
+raw_db_url = os.getenv("DATABASE_URL", "postgresql+asyncpg://gridpilot:gridpilot_secret@localhost:5432/gridpilot")
+if raw_db_url.startswith("postgresql://"):
+    DATABASE_URL = raw_db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+else:
+    DATABASE_URL = raw_db_url
 
 engine = create_async_engine(DATABASE_URL, echo=False)
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)

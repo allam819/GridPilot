@@ -2,10 +2,21 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth, backtest, digital_twin, assets, history
 
+from contextlib import asynccontextmanager
+from src.db.models import engine, Base
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Create all tables on startup if they don't exist
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+    yield
+
 app = FastAPI(
     title="GridPilot API",
     description="Backend for GridPilot AI-driven VPP",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 
 app.add_middleware(

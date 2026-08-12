@@ -269,7 +269,7 @@ export default function Dashboard() {
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
               onMouseMove={(e) => {
                 if (e.activeTooltipIndex !== undefined) {
-                  setActiveIndex(e.activeTooltipIndex);
+                  setActiveIndex(e.activeTooltipIndex as number);
                 }
               }}
               onMouseLeave={() => setActiveIndex(0)}

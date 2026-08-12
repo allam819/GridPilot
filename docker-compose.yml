@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: gridpilot-timescaledb
+    environment:
+      - POSTGRES_USER=gridpilot
+      - POSTGRES_PASSWORD=gridpilot_secret
+      - POSTGRES_DB=gridpilot
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:alpine
+    container_name: gridpilot-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  backend:
+    build: .
+    container_name: gridpilot-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://gridpilot:gridpilot_secret@timescaledb:5432/gridpilot
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=super_secret_gridpilot_key
+    depends_on:
+      - timescaledb
+      - redis
+    restart: unless-stopped
+
+volumes:
+  timescaledb-data:

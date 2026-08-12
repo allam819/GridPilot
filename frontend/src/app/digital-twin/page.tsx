@@ -44,7 +44,8 @@ export default function DigitalTwinSimulator() {
   const fetchHistory = async () => {
     if (!token) return;
     try {
-      const res = await fetch('http://localhost:8000/api/v1/simulate/history', {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${API_URL}/api/v1/simulate/history`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
@@ -60,7 +61,8 @@ export default function DigitalTwinSimulator() {
     setStatus('PENDING');
     const poll = setInterval(async () => {
       try {
-        const pollRes = await fetch(`http://localhost:8000/api/v1/simulate/tasks/${taskId}`, {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const pollRes = await fetch(`${API_URL}/api/v1/simulate/tasks/${taskId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         
@@ -104,7 +106,8 @@ export default function DigitalTwinSimulator() {
     const fetchAssets = async () => {
       if (!token) return;
       try {
-        const res = await fetch('http://localhost:8000/api/v1/assets', {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+        const res = await fetch(`${API_URL}/api/v1/assets`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (res.status === 401) { logout(); return; }
@@ -131,7 +134,8 @@ export default function DigitalTwinSimulator() {
     setResults(null);
     
     try {
-      const res = await fetch('http://localhost:8000/api/v1/simulate/digital-twin', {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${API_URL}/api/v1/simulate/digital-twin`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -177,7 +181,8 @@ export default function DigitalTwinSimulator() {
 
   const deleteHistoricalRun = async (id: number) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/v1/simulate/history/${id}`, {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${API_URL}/api/v1/simulate/history/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

@@ -25,7 +25,8 @@ export default function AssetsPage() {
 
   const fetchAssets = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/v1/assets', {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${API_URL}/api/v1/assets`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.status === 401) { logout(); return; }
@@ -47,7 +48,8 @@ export default function AssetsPage() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const res = await fetch('http://localhost:8000/api/v1/assets', {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${API_URL}/api/v1/assets`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -75,7 +77,8 @@ export default function AssetsPage() {
 
   const handleDelete = async (id: number) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/v1/assets/${id}`, {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${API_URL}/api/v1/assets/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

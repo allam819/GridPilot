@@ -15,6 +15,9 @@ if raw_db_url.startswith("postgresql://"):
 else:
     DATABASE_URL = raw_db_url
 
+# asyncpg does not support the sslmode parameter, so we strip it if present
+DATABASE_URL = DATABASE_URL.replace("?sslmode=require", "").replace("&sslmode=require", "")
+
 engine = create_async_engine(DATABASE_URL, echo=False)
 AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
